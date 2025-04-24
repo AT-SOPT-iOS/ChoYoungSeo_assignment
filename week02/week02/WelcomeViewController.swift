@@ -17,7 +17,13 @@ final class WelcomeViewController: UIViewController {
     }()
     
     @objc private func backTologinButtonTapped() {
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
+    }
+    
+    // 상단바 뒤로가기 버튼 비활성화
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     // MARK: - 생명주기
