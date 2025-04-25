@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-final class LoginViewController: UIViewController {
-    
+final class LoginViewController: UIViewController, UITextFieldDelegate {
+
     private var nickname: String?
     
     // MARK: - UI 요소
@@ -51,6 +51,9 @@ final class LoginViewController: UIViewController {
 
         textField.rightView = container
         textField.rightViewMode = .always
+        
+        textField.delegate = self
+        textField.rightView?.isHidden = true
 
         return textField
     }()
@@ -78,6 +81,9 @@ final class LoginViewController: UIViewController {
 
         textField.rightView = container
         textField.rightViewMode = .always
+        
+        textField.delegate = self
+        textField.rightView?.isHidden = true
 
         return textField
     }()
@@ -110,6 +116,15 @@ final class LoginViewController: UIViewController {
         validateInputFields()
     }
     
+
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.rightView?.isHidden = false
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.rightView?.isHidden = true
+    }
+    
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인하기", for: .normal)
@@ -137,7 +152,7 @@ final class LoginViewController: UIViewController {
         
         if isEnabled {
             loginButton.setTitleColor(.white, for: .normal)
-            loginButton.backgroundColor = .tvingRed
+            loginButton.backgroundColor = .tvingred
             loginButton.layer.borderWidth = 0
             loginButton.layer.borderColor = UIColor.clear.cgColor
         }
@@ -233,7 +248,7 @@ final class LoginViewController: UIViewController {
         pwResetButton.addTarget(self, action: #selector(clearPasswordText), for: .touchUpInside)
         eyeButton.addTarget(self, action: #selector(togglePasswordVisibility), for: .touchUpInside)
         makenameButton.addTarget(self, action: #selector(showBottomSheet), for: .touchUpInside)
-
+        
         
         // MARK: - 타이틀 레이블
         let titleLabel = UILabel()

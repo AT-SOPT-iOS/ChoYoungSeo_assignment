@@ -67,7 +67,7 @@ final class LoginBottomSheetViewController: UIViewController {
     
     private func updateButtonState(isEnabled: Bool) {
         saveButton.isEnabled = isEnabled
-        saveButton.backgroundColor = isEnabled ? .tvingRed : .black
+        saveButton.backgroundColor = isEnabled ? .tvingred : .black
         saveButton.layer.borderWidth = 0
         saveButton.layer.borderColor = UIColor.clear.cgColor
     }

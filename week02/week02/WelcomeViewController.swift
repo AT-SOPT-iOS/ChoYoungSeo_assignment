@@ -11,7 +11,7 @@ final class WelcomeViewController: UIViewController {
         button.setTitle("메인으로", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont(name: "Pretendard-SemiBold", size: 14)
-        button.backgroundColor = UIColor(named: "tvingRed")
+        button.backgroundColor = UIColor(named: "tvingred")
         button.layer.cornerRadius = 3
         return button
     }()
