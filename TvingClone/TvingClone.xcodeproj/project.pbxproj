@@ -107,7 +107,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3A4B31E12DAC1AA600C672EE /* Build configuration list for PBXProject "week02" */;
+			buildConfigurationList = 3A4B31E12DAC1AA600C672EE /* Build configuration list for PBXProject "TvingClone" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -329,7 +329,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3A4B31E12DAC1AA600C672EE /* Build configuration list for PBXProject "week02" */ = {
+		3A4B31E12DAC1AA600C672EE /* Build configuration list for PBXProject "TvingClone" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A4B31FC2DAC1AA800C672EE /* Debug */,
