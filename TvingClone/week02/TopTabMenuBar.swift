@@ -36,6 +36,13 @@ final class TopTabMenuBar: UIView {
         return cv
     }()
 
+    private let backgroundBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .gray2
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     private let indicatorBar: UIView = {
         let view = UIView()
         view.backgroundColor = .white
@@ -54,8 +61,11 @@ final class TopTabMenuBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Setup
+
     private func setupView() {
         addSubview(collectionView)
+        addSubview(backgroundBar)
         addSubview(indicatorBar)
 
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -66,13 +76,20 @@ final class TopTabMenuBar: UIView {
             collectionView.heightAnchor.constraint(equalToConstant: 40)
         ])
 
+        backgroundBar.snp.makeConstraints {
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
+            $0.height.equalTo(2)
+        }
+
         layoutIfNeeded()
         setIndicatorConstraint()
     }
 
     private func setIndicatorConstraint() {
         let width = UIScreen.main.bounds.width / CGFloat(menuItems.count)
-        indicatorLeadingConstraint = indicatorBar.leadingAnchor.constraint(equalTo: collectionView.leadingAnchor)
+        indicatorLeadingConstraint = indicatorBar.leadingAnchor.constraint(equalTo: leadingAnchor)
+
         NSLayoutConstraint.activate([
             indicatorBar.bottomAnchor.constraint(equalTo: bottomAnchor),
             indicatorBar.heightAnchor.constraint(equalToConstant: 2),
@@ -84,6 +101,7 @@ final class TopTabMenuBar: UIView {
     private func selectInitialTab() {
         let indexPath = IndexPath(item: 0, section: 0)
         collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+        moveIndicator(to: 0)
     }
 
     private func moveIndicator(to index: Int) {
@@ -104,7 +122,10 @@ extension TopTabMenuBar: UICollectionViewDataSource, UICollectionViewDelegateFlo
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MenuTabCollectionViewCell.reuseIdentifier, for: indexPath) as? MenuTabCollectionViewCell else {
+        guard let cell = collectionView.dequeueReusableCell(
+            withReuseIdentifier: MenuTabCollectionViewCell.reuseIdentifier,
+            for: indexPath
+        ) as? MenuTabCollectionViewCell else {
             return UICollectionViewCell()
         }
         cell.configure(with: menuItems[indexPath.item])
@@ -117,7 +138,9 @@ extension TopTabMenuBar: UICollectionViewDataSource, UICollectionViewDelegateFlo
         delegate?.didSelectTab(at: selectedIndex)
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
         let width = UIScreen.main.bounds.width / CGFloat(menuItems.count)
         return CGSize(width: width, height: 40)
     }
