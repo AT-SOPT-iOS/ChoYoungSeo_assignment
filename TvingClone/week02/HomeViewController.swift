@@ -38,23 +38,45 @@ final class HomeViewController: UIViewController {
 
     // MARK: - Layout
     private func setupLayout() {
+        let headerView = makeHeaderView()
+
+        view.addSubview(headerView)
+        view.addSubview(menuTabView)
         view.addSubview(tableView)
-        tableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+
+        // 1. 헤더뷰
+        headerView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(100)
         }
 
-        let headerView = makeHeaderView()
-        tableView.tableHeaderView = headerView
-        headerView.frame.size = headerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        // 2. 탭바
+        menuTabView.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(40)
+        }
 
+        // 3. 테이블뷰
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(menuTabView.snp.bottom).offset(7)
+            $0.leading.trailing.bottom.equalToSuperview()
+        }
+
+        // 푸터뷰
         let footerView = makeFooterView()
+        footerView.setNeedsLayout()
+        footerView.layoutIfNeeded()
+        let footerSize = footerView.systemLayoutSizeFitting(CGSize(width: view.frame.width, height: UIView.layoutFittingCompressedSize.height))
+        footerView.frame = CGRect(origin: .zero, size: footerSize)
         tableView.tableFooterView = footerView
-        footerView.frame.size = footerView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
+
 
     private func makeHeaderView() -> UIView {
         let container = UIView()
-        [logoImageView, searchButton, vLogoButton, menuTabView, mainPosterImageView].forEach {
+        [logoImageView, searchButton, vLogoButton].forEach {
             container.addSubview($0)
         }
 
@@ -77,21 +99,9 @@ final class HomeViewController: UIViewController {
             $0.size.equalTo(30)
         }
 
-        menuTabView.snp.makeConstraints {
-            $0.top.equalTo(logoImageView.snp.bottom).offset(0)
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(40)
-        }
-
-        mainPosterImageView.snp.makeConstraints {
-            $0.top.equalTo(menuTabView.snp.bottom).offset(17)
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(400)
-            $0.bottom.equalToSuperview().offset(-20)
-        }
-
         return container
     }
+
 
     private func makeFooterView() -> UIView {
         let container = UIView()
@@ -124,14 +134,6 @@ final class HomeViewController: UIViewController {
     private let logoImageView = makeImageView(named: "tving")
     private let searchButton = makeIconButton(named: "search")
     private let vLogoButton = makeIconButton(named: "tving_minilogo")
-
-    private let mainPosterImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "main_poster")
-        imageView.contentMode = .scaleAspectFill
-        imageView.clipsToBounds = true
-        return imageView
-    }()
 
     // MARK: - Footer UI Components
     private let contactButton = makeFooterButton("고객문의")

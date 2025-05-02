@@ -20,19 +20,35 @@ final class HomeTableViewCell: UITableViewCell {
     private var favoriteList: [FavoriteModel] = []
 
     // MARK: - Section Headers
-    private let topRankingHeader = makeSectionHeader(title: "오늘의 티빙 TOP 10")
+    private let topRankingTitleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "오늘의 티빙 TOP 10"
+        label.textColor = .white
+        label.font = UIFont(name: "Pretendard-Bold", size: 15)
+        return label
+    }()
     private let liveHeader = makeSectionHeader(title: "실시간 인기 LIVE")
     private let movieHeader = makeSectionHeader(title: "실시간 인기 영화")
     private let favoriteHeader = makeSectionHeader(title: "김가현PD의 인생작 TOP 5")
 
+    // MARK: - Poster Image
+    private let posterImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "main_poster")
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        return imageView
+    }()
+
     // MARK: - CollectionViews
-    private let topRankingCollectionView = makeCollectionView(itemSize: CGSize(width: 135, height: 146), spacing: 13)
+    private let topRankingCollectionView = makeCollectionView(itemSize: CGSize(width: 160, height: 146), spacing: 13)
     private let liveCollectionView = makeCollectionView(itemSize: CGSize(width: 160, height: 140), spacing: 8)
     private let movieCollectionView = makeCollectionView(itemSize: CGSize(width: 98, height: 146), spacing: 8)
     private let baseballCollectionView = makeCollectionView(itemSize: CGSize(width: 80, height: 50), spacing: 0)
     private let programCollectionView = makeCollectionView(itemSize: CGSize(width: 90, height: 45), spacing: 8)
     private let favoriteCollectionView = makeCollectionView(itemSize: CGSize(width: 160, height: 90), spacing: 8)
 
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
@@ -46,6 +62,7 @@ final class HomeTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Setup
     private func setupCollectionViews() {
         [topRankingCollectionView, liveCollectionView, movieCollectionView, baseballCollectionView, programCollectionView, favoriteCollectionView].forEach {
             $0.delegate = self
@@ -61,19 +78,25 @@ final class HomeTableViewCell: UITableViewCell {
     }
 
     private func setupLayout() {
-        [topRankingHeader, topRankingCollectionView,
+        [posterImageView,
+         topRankingTitleLabel, topRankingCollectionView,
          liveHeader, liveCollectionView,
          movieHeader, movieCollectionView,
          baseballCollectionView, programCollectionView,
          favoriteHeader, favoriteCollectionView
         ].forEach { contentView.addSubview($0) }
 
-        topRankingHeader.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(9)
+        posterImageView.snp.makeConstraints {
+            $0.top.leading.trailing.equalToSuperview()
+            $0.height.equalTo(400)
+        }
+
+        topRankingTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(posterImageView.snp.bottom).offset(28)
             $0.leading.trailing.equalToSuperview().inset(13)
         }
         topRankingCollectionView.snp.makeConstraints {
-            $0.top.equalTo(topRankingHeader.snp.bottom).offset(9)
+            $0.top.equalTo(topRankingTitleLabel.snp.bottom).offset(9)
             $0.leading.trailing.equalToSuperview().inset(12)
             $0.height.equalTo(146)
         }
@@ -130,7 +153,9 @@ final class HomeTableViewCell: UITableViewCell {
         programList = ProgramModel.dummy()
         favoriteList = FavoriteModel.dummy()
 
-        [topRankingCollectionView, liveCollectionView, movieCollectionView, baseballCollectionView, programCollectionView, favoriteCollectionView].forEach { $0.reloadData() }
+        [topRankingCollectionView, liveCollectionView, movieCollectionView, baseballCollectionView, programCollectionView, favoriteCollectionView].forEach {
+            $0.reloadData()
+        }
     }
 
     private static func makeSectionHeader(title: String) -> UIStackView {
@@ -206,6 +231,7 @@ extension HomeTableViewCell: UICollectionViewDelegate, UICollectionViewDataSourc
         }
     }
 }
+
 #Preview {
     HomeTableViewCell()
 }

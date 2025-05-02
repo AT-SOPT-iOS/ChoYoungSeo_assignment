@@ -19,6 +19,7 @@ final class TopRankingCollectionViewCell: UICollectionViewCell {
         label.font = UIFont(name: "Pretendard-Bold", size: 48)
         label.textColor = .white
         label.textAlignment = .center
+        
         return label
     }()
 
