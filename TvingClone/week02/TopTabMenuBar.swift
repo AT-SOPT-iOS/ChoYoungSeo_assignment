@@ -38,7 +38,7 @@ final class TopTabMenuBar: UIView {
 
     private let backgroundBar: UIView = {
         let view = UIView()
-        view.backgroundColor = .gray2
+        view.backgroundColor = .gray4
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -79,7 +79,7 @@ final class TopTabMenuBar: UIView {
         backgroundBar.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
-            $0.height.equalTo(2)
+            $0.height.equalTo(1) 
         }
 
         layoutIfNeeded()
@@ -87,13 +87,15 @@ final class TopTabMenuBar: UIView {
     }
 
     private func setIndicatorConstraint() {
-        let width = UIScreen.main.bounds.width / CGFloat(menuItems.count)
-        indicatorLeadingConstraint = indicatorBar.leadingAnchor.constraint(equalTo: leadingAnchor)
+        let tabWidth = UIScreen.main.bounds.width / CGFloat(menuItems.count)
+        let initialCenterX = tabWidth * 0.5
+
+        indicatorLeadingConstraint = indicatorBar.centerXAnchor.constraint(equalTo: leadingAnchor, constant: initialCenterX)
 
         NSLayoutConstraint.activate([
             indicatorBar.bottomAnchor.constraint(equalTo: bottomAnchor),
             indicatorBar.heightAnchor.constraint(equalToConstant: 2),
-            indicatorBar.widthAnchor.constraint(equalToConstant: width),
+            indicatorBar.widthAnchor.constraint(equalToConstant: 15),
             indicatorLeadingConstraint!
         ])
     }
@@ -105,8 +107,9 @@ final class TopTabMenuBar: UIView {
     }
 
     private func moveIndicator(to index: Int) {
-        let width = UIScreen.main.bounds.width / CGFloat(menuItems.count)
-        indicatorLeadingConstraint?.constant = width * CGFloat(index)
+        let tabWidth = UIScreen.main.bounds.width / CGFloat(menuItems.count)
+        let newCenterX = tabWidth * (CGFloat(index) + 0.5)
+        indicatorLeadingConstraint?.constant = newCenterX
 
         UIView.animate(withDuration: 0.3) {
             self.layoutIfNeeded()
