@@ -16,10 +16,9 @@ final class TopRankingCollectionViewCell: UICollectionViewCell {
 
     private let rankingLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Bold", size: 48)
+        label.font = UIFont.italicSystemFont(ofSize: 48)
         label.textColor = .white
         label.textAlignment = .center
-        
         return label
     }()
 

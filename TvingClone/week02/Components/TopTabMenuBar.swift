@@ -53,6 +53,7 @@ final class TopTabMenuBar: UIView {
     // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.backgroundColor = .clear
         setupView()
         selectInitialTab()
     }

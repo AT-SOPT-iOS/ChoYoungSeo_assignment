@@ -10,10 +10,11 @@ import SnapKit
 final class HomeViewController: UIViewController {
     
     private var selectedTabIndex: Int = 0
-
+    
     // MARK: - UI Components
     private let tableView = UITableView()
     private let menuTabView = TopTabMenuBar()
+    private let tableManager = MainTabTableManager()
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -22,6 +23,7 @@ final class HomeViewController: UIViewController {
         setupTableView()
         setupLayout()
         menuTabView.delegate = self
+        tableManager.scrollDelegate = self
     }
 
     // MARK: - TableView Setup
@@ -29,38 +31,61 @@ final class HomeViewController: UIViewController {
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
-        tableView.dataSource = self
-        tableView.delegate = self
+        tableView.dataSource = tableManager
+        tableView.delegate = tableManager
         tableView.estimatedRowHeight = 1000
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
     }
 
     // MARK: - Layout
-    private func setupLayout() {
-        let headerView = makeHeaderView()
+    private let logoHeaderView = UIView()
 
-        view.addSubview(headerView)
+    private func setupLayout() {
+        view.addSubview(logoHeaderView)
         view.addSubview(menuTabView)
         view.addSubview(tableView)
 
+        logoHeaderView.addSubview(logoImageView)
+        logoHeaderView.addSubview(vLogoButton)
+        logoHeaderView.addSubview(searchButton)
+
         // 1. 헤더뷰
-        headerView.snp.makeConstraints {
-            $0.top.equalToSuperview()
+        logoHeaderView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(0)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(100)
         }
 
+        logoImageView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(21)
+            $0.leading.equalToSuperview()
+            $0.width.equalTo(191)
+            $0.height.equalTo(78)
+        }
+
+        vLogoButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(45)
+            $0.trailing.equalToSuperview().inset(11)
+            $0.size.equalTo(30)
+        }
+
+        searchButton.snp.makeConstraints {
+            $0.top.equalTo(vLogoButton)
+            $0.trailing.equalTo(vLogoButton.snp.leading).offset(-11)
+            $0.size.equalTo(30)
+        }
+
         // 2. 탭바
         menuTabView.snp.makeConstraints {
-            $0.top.equalTo(headerView.snp.bottom)
+            $0.top.equalTo(logoHeaderView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(40)
         }
 
         // 3. 테이블뷰
         tableView.snp.makeConstraints {
-            $0.top.equalTo(menuTabView.snp.bottom).offset(7)
+            $0.top.equalTo(menuTabView.snp.bottom).offset(8)
             $0.leading.trailing.bottom.equalToSuperview()
         }
 
@@ -228,50 +253,30 @@ final class HomeViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource, UITableViewDelegate
-
-extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1 
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if selectedTabIndex == 0 {
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as? HomeTableViewCell else {
-                return UITableViewCell()
-            }
-            return cell
-        } else {
-            let cell = UITableViewCell()
-            cell.backgroundColor = .black
-            
-            let label = UILabel()
-            label.text = "준비 중~"
-            label.textColor = .white
-            label.font = UIFont(name: "Pretendard-Regular", size: 14)
-            label.translatesAutoresizingMaskIntoConstraints = false
-
-            cell.contentView.addSubview(label)
-            NSLayoutConstraint.activate([
-                label.centerXAnchor.constraint(equalTo: cell.contentView.centerXAnchor),
-                label.centerYAnchor.constraint(equalTo: cell.contentView.centerYAnchor)
-            ])
-
-            return cell
-        }
-    }
-}
-
 // MARK: - TopTabMenuBarDelegate
 
 extension HomeViewController: TopTabMenuBarDelegate {
     func didSelectTab(at index: Int) {
         selectedTabIndex = index
+        tableManager.selectedTabIndex = index
         tableView.reloadData()
     }
 }
 
+extension HomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let offsetY = scrollView.contentOffset.y
+        
+        // 헤더는 최대 100만큼 위로 사라짐
+        let hideHeight = min(max(offsetY, 0), 100)
+        logoHeaderView.transform = CGAffineTransform(translationX: 0, y: -hideHeight)
+        
+        // 메뉴탭은 헤더 스크롤 비율에 맞춰 최대 올라감
+        let menuTabLift = hideHeight * (40 / 100.0)
+        menuTabView.transform = CGAffineTransform(translationX: 0, y: -menuTabLift)
+    }
+}
 
 #Preview {
     HomeViewController()

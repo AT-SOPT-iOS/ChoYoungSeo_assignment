@@ -24,7 +24,7 @@ final class LiveCollectionViewCell: UICollectionViewCell {
 
     private let rankingLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont(name: "Pretendard-Bold", size: 19)
+        label.font = UIFont.italicSystemFont(ofSize: 20)
         label.textColor = .white
         label.textAlignment = .center
         return label
