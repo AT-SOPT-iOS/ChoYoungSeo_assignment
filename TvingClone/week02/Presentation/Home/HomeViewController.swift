@@ -10,11 +10,18 @@ import SnapKit
 final class HomeViewController: UIViewController {
     
     private var selectedTabIndex: Int = 0
+    private var prevTopOffset: CGFloat = 0
     
     // MARK: - UI Components
     private let tableView = UITableView()
     private let menuTabView = TopTabMenuBar()
     private let tableManager = MainTabTableManager()
+
+    private let logoHeaderView = UIView()
+    
+    // 제약조건 저장
+    private var logoHeaderViewTopConstraint: Constraint?
+    private var menuTabViewTopConstraint: Constraint?
 
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -39,8 +46,6 @@ final class HomeViewController: UIViewController {
     }
 
     // MARK: - Layout
-    private let logoHeaderView = UIView()
-
     private func setupLayout() {
         view.addSubview(logoHeaderView)
         view.addSubview(menuTabView)
@@ -52,7 +57,7 @@ final class HomeViewController: UIViewController {
 
         // 1. 헤더뷰
         logoHeaderView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(0)
+            self.logoHeaderViewTopConstraint = $0.top.equalToSuperview().offset(0).constraint
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(100)
         }
@@ -78,7 +83,7 @@ final class HomeViewController: UIViewController {
 
         // 2. 탭바
         menuTabView.snp.makeConstraints {
-            $0.top.equalTo(logoHeaderView.snp.bottom)
+            self.menuTabViewTopConstraint = $0.top.equalTo(logoHeaderView.snp.bottom).constraint
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(40)
         }
@@ -98,7 +103,7 @@ final class HomeViewController: UIViewController {
         tableView.tableFooterView = footerView
     }
 
-
+    // MARK: - Header/Footer 구성
     private func makeHeaderView() -> UIView {
         let container = UIView()
         [logoImageView, searchButton, vLogoButton].forEach {
@@ -126,7 +131,6 @@ final class HomeViewController: UIViewController {
 
         return container
     }
-
 
     private func makeFooterView() -> UIView {
         let container = UIView()
@@ -263,20 +267,22 @@ extension HomeViewController: TopTabMenuBarDelegate {
     }
 }
 
+// MARK: - UIScrollViewDelegate
+
 extension HomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
         let offsetY = scrollView.contentOffset.y
+        let clampedOffsetY = max(min(offsetY, 80), 0)
         
-        // 헤더는 최대 100만큼 위로 사라짐
-        let hideHeight = min(max(offsetY, 0), 100)
-        logoHeaderView.transform = CGAffineTransform(translationX: 0, y: -hideHeight)
+        let headerOffset = -clampedOffsetY
+        logoHeaderViewTopConstraint?.update(offset: headerOffset)
         
-        // 메뉴탭은 헤더 스크롤 비율에 맞춰 최대 올라감
-        let menuTabLift = hideHeight * (40 / 100.0)
-        menuTabView.transform = CGAffineTransform(translationX: 0, y: -menuTabLift)
+        view.layoutIfNeeded()
+
+
     }
 }
+
 
 #Preview {
     HomeViewController()
