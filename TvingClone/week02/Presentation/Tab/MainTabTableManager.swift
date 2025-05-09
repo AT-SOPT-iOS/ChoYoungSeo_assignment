@@ -18,12 +18,18 @@ extension MainTabTableManager: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if selectedTabIndex == 0 {
+        switch selectedTabIndex {
+        case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.identifier, for: indexPath) as? HomeTableViewCell else {
                 return UITableViewCell()
             }
             return cell
-        } else {
+        case 3:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: BoxOfficeContentCell.identifier, for: indexPath) as? BoxOfficeContentCell else {
+                return UITableViewCell()
+            }
+            return cell
+        default:
             let cell = UITableViewCell()
             cell.backgroundColor = .black
             let label = UILabel()
@@ -39,6 +45,7 @@ extension MainTabTableManager: UITableViewDelegate, UITableViewDataSource {
             return cell
         }
     }
+
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         scrollDelegate?.scrollViewDidScroll?(scrollView)
