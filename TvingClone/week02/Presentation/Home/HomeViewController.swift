@@ -40,9 +40,10 @@ final class HomeViewController: UIViewController {
         tableView.showsVerticalScrollIndicator = false
         tableView.dataSource = tableManager
         tableView.delegate = tableManager
-        tableView.estimatedRowHeight = 1000
+        tableView.estimatedRowHeight = 600
         tableView.rowHeight = UITableView.automaticDimension
         tableView.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.identifier)
+        tableView.register(BoxOfficeContentCell.self, forCellReuseIdentifier: BoxOfficeContentCell.identifier)
     }
 
     // MARK: - Layout
@@ -103,35 +104,7 @@ final class HomeViewController: UIViewController {
         tableView.tableFooterView = footerView
     }
 
-    // MARK: - Header/Footer 구성
-    private func makeHeaderView() -> UIView {
-        let container = UIView()
-        [logoImageView, searchButton, vLogoButton].forEach {
-            container.addSubview($0)
-        }
-
-        logoImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(21)
-            $0.leading.equalToSuperview()
-            $0.width.equalTo(191)
-            $0.height.equalTo(78)
-        }
-
-        vLogoButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(45)
-            $0.trailing.equalToSuperview().inset(11)
-            $0.size.equalTo(30)
-        }
-
-        searchButton.snp.makeConstraints {
-            $0.top.equalTo(vLogoButton)
-            $0.trailing.equalTo(vLogoButton.snp.leading).offset(-11)
-            $0.size.equalTo(30)
-        }
-
-        return container
-    }
-
+    // MARK: - Footer 구성
     private func makeFooterView() -> UIView {
         let container = UIView()
         [noticePwView, infoStackView1, infoStackView2].forEach {
