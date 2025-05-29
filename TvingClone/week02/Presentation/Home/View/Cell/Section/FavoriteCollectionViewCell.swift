@@ -29,9 +29,8 @@ final class FavoriteCollectionViewCell: UICollectionViewCell {
     }
     
     private func setLayout() {
-        [favoriteCollectionView].forEach {
-            contentView.addSubview($0)
-        }
+        contentView.addSubview(favoriteCollectionView)
+
         
         favoriteCollectionView.snp.makeConstraints {
             $0.top.equalToSuperview()
@@ -40,7 +39,6 @@ final class FavoriteCollectionViewCell: UICollectionViewCell {
         }
     }
 }
-
 
 
 extension FavoriteCollectionViewCell {
