@@ -40,8 +40,3 @@ struct HomeView: View {
         .background(Color.black)
     }
 }
-
-
-#Preview {
-    HomeView()
-}

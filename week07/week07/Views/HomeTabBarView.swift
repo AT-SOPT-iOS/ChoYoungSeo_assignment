@@ -10,7 +10,6 @@ import SwiftUI
 struct HomeTabBarView: View {
     let tabs = ["홈", "드라마", "예능", "영화", "스포츠", "뉴스"]
     @State private var selectedTab: String = "홈"
-    @Namespace private var indicatorNamespace
 
     var body: some View {
         ZStack(alignment: .bottomLeading) {
@@ -22,7 +21,10 @@ struct HomeTabBarView: View {
                         .background(
                             GeometryReader { geo in
                                 Color.clear
-                                    .preference(key: TabPreferenceKey.self, value: [tab: geo.frame(in: .named("TabBarArea"))])
+                                    .preference(
+                                        key: TabPreferenceKey.self,
+                                        value: [tab: geo.frame(in: .named("TabBarArea"))]
+                                    )
                             }
                         )
                         .onTapGesture {
