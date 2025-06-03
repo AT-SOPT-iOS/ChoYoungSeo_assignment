@@ -45,7 +45,8 @@ struct LiveSectionView: View {
                             
                             HStack(alignment: .top) {
                                 Text(live.ranking)
-                                    .font(.custom("Pretendard-Bold", size: 19))
+                                    .font(.system(size: 19, weight: .bold, design: .default))
+                                    .italic()
                                     .foregroundColor(.white)
                                     .padding(.leading, 6)
                                 

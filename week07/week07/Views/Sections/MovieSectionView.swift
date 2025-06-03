@@ -1,5 +1,5 @@
 //
-//  RankingSectionView.swift
+//  MovieSectionView.swift
 //  week07
 //
 //  Created by 조영서 on 5/27/25.
@@ -7,9 +7,9 @@
 
 import SwiftUI
 
-struct RankingSectionView: View {
+struct MovieSectionView: View {
     let title: String
-    let rankings: [Ranking]
+    let movies: [Movie]
     
     let rows = [
         GridItem(.flexible())
@@ -21,29 +21,27 @@ struct RankingSectionView: View {
                 Text(title)
                     .font(.custom("Pretendard-Bold", size: 15))
                     .foregroundColor(.white)
+                
+                Spacer()
+                
+                Text("더보기")
+                    .font(.custom("Pretendard-Bold", size: 12))
+                    .foregroundColor(.gray2)
             }
             .padding(.horizontal, 12)
             .padding(.bottom, 4)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHGrid(rows: rows, spacing: 12) {
-                    ForEach(rankings) { ranking in
-                        HStack(alignment: .bottom) {
-                            Text(ranking.ranking)
-                                .font(.system(size: 50, weight: .bold, design: .default))
-                                .italic()
-                                .foregroundColor(.white)
-                                .padding(.leading, 6)
-                            
+                    ForEach(movies) { movie in
                         VStack(alignment: .leading, spacing: 4) {
-                            Image(ranking.imageName)
+                            Image(movie.imageName)
                                 .resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 98, height: 146)
                                 .clipped()
                                 .cornerRadius(3)
                                 .padding(.bottom, 10)
-                            }
                         }
                     }
                 }
